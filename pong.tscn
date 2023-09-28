@@ -1,0 +1,127 @@
+[gd_scene load_steps=11 format=3 uid="uid://ch00sqtm8ywap"]
+
+[ext_resource type="Script" path="res://Goals.gd" id="1_5q3q2"]
+[ext_resource type="Script" path="res://Paddles.gd" id="1_vq54o"]
+[ext_resource type="Script" path="res://Ball.gd" id="2_k6848"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o32pp"]
+size = Vector2(440.545, 37.2727)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rs3vi"]
+size = Vector2(20, 202)
+
+[sub_resource type="QuadMesh" id="QuadMesh_urva8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_r5nja"]
+size = Vector2(8, 128)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4p6nq"]
+size = Vector2(36, 132)
+
+[sub_resource type="QuadMesh" id="QuadMesh_aktbs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4cni1"]
+size = Vector2(18, 18)
+
+[node name="Pong" type="Node2D"]
+
+[node name="BallDetector" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BallDetector"]
+position = Vector2(576, -51.75)
+scale = Vector2(2.75, 2.75)
+shape = SubResource("RectangleShape2D_o32pp")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="BallDetector"]
+position = Vector2(576, 699)
+scale = Vector2(2.75, 2.75)
+shape = SubResource("RectangleShape2D_o32pp")
+
+[node name="Wall" type="StaticBody2D" parent="."]
+collision_layer = 2
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Wall"]
+position = Vector2(576, -51.75)
+scale = Vector2(2.75, 2.75)
+shape = SubResource("RectangleShape2D_o32pp")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Wall"]
+position = Vector2(576, 699)
+scale = Vector2(2.75, 2.75)
+shape = SubResource("RectangleShape2D_o32pp")
+
+[node name="Goals" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("1_5q3q2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Goals"]
+position = Vector2(-48, 328)
+scale = Vector2(3.875, 3.875)
+shape = SubResource("RectangleShape2D_rs3vi")
+debug_color = Color(0.956863, 0.168627, 0.32549, 0.419608)
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Goals"]
+position = Vector2(1200, 328)
+scale = Vector2(3.875, 3.875)
+shape = SubResource("RectangleShape2D_rs3vi")
+debug_color = Color(0.956863, 0.168627, 0.32549, 0.419608)
+
+[node name="P1" type="CharacterBody2D" parent="."]
+position = Vector2(64, 328)
+collision_mask = 6
+script = ExtResource("1_vq54o")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="P1"]
+scale = Vector2(32, 128)
+mesh = SubResource("QuadMesh_urva8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="P1"]
+shape = SubResource("RectangleShape2D_r5nja")
+
+[node name="BallDetector" type="Area2D" parent="P1"]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="P1/BallDetector"]
+shape = SubResource("RectangleShape2D_4p6nq")
+debug_color = Color(0.615686, 0.533333, 0.145098, 0.419608)
+
+[node name="P2" type="CharacterBody2D" parent="."]
+position = Vector2(1087, 328)
+collision_mask = 6
+script = ExtResource("1_vq54o")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="P2"]
+scale = Vector2(32, 128)
+mesh = SubResource("QuadMesh_urva8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="P2"]
+shape = SubResource("RectangleShape2D_r5nja")
+
+[node name="BallDetector" type="Area2D" parent="P2"]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="P2/BallDetector"]
+shape = SubResource("RectangleShape2D_4p6nq")
+debug_color = Color(0.615686, 0.533333, 0.145098, 0.419608)
+
+[node name="Ball" type="Area2D" parent="."]
+position = Vector2(576, 328)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_k6848")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Ball"]
+scale = Vector2(16, 16)
+mesh = SubResource("QuadMesh_aktbs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
+shape = SubResource("RectangleShape2D_4cni1")
+
+[connection signal="area_entered" from="BallDetector" to="Ball" method="_flip_v_side"]
+[connection signal="area_entered" from="Goals" to="Goals" method="_ball_scored"]
+[connection signal="area_entered" from="P1/BallDetector" to="Ball" method="_ball_hitted"]
+[connection signal="area_entered" from="P2/BallDetector" to="Ball" method="_ball_hitted"]
